@@ -34,8 +34,8 @@ class UpdateTaskRequest extends CustomRequest
         }
 
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:255'],
             'due_date' => ['nullable', 'date'],
             'status' => ['nullable', Rule::in(TaskStatus::values())],
             'priority' => ['nullable', Rule::in(TaskPriority::values())],

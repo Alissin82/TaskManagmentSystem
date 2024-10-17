@@ -23,9 +23,9 @@ class TaskService
         return Task::create($task->toArray());
     }
 
-    public function update(TaskDto $task, int $id): int
+    public function update(array $task, int $id): int
     {
-        return Task::whereId($id)->update($task->toArray());
+        return Task::whereId($id)->update($task);
     }
 
     public function delete(int $id){

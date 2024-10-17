@@ -51,7 +51,7 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, int $id)
     {
         try {
-            $updateResult = $this->taskService->update(new TaskDto($request->validated()), $id);
+            $updateResult = $this->taskService->update($request->validated(), $id);
             return $this->successResponse('task updated', $updateResult);
         } catch (Exception $e){
             Log::error('Error updating task: ' . $e->getMessage());
