@@ -1,0 +1,14 @@
+{
+    "title": "عنوان",
+    "description": "توضیحات",
+    "due_date": "تاریخ پایان",
+    "priority": "اولویت",
+    "status": "وضعیت",
+    "important": "مهم",
+    "high": "بالا",
+    "normal": "عادی",
+    "low": "پایین",
+    "completed": "کامل شده",
+    "pending": "در حال انجام",
+    "suspended": "به تعویق افتاده"
+}
