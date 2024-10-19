@@ -10,7 +10,7 @@ class TaskDto
     use DtoToArrayTrait;
 
     public string $title;
-    public string $description;
+    public ?string $description;
     public ?int $priority;
     public ?string $status;
     public ?string $due_date;
@@ -27,7 +27,7 @@ class TaskDto
     public function __construct(mixed $data)
     {
         $this->title = $data['title'];
-        $this->description = $data['description'];
+        $this->description = $data['description'] ?? null;
         $this->priority = $data['priority'] ?? TaskPriority::normal->value;
         $this->status = $data['status'] ?? TaskStatus::pending->value;
         $this->due_date = $data['due_date'] ?? null;

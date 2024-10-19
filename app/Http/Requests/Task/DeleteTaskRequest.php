@@ -24,10 +24,12 @@ class DeleteTaskRequest extends CustomRequest
      */
     public function rules(): array
     {
-        $id = $this->route()->parameter('task');
+        if ( $this->route() != null ) {
+            $id = $this->route()->parameter('task');
 
-        if (!Task::find($id)) {
-            throw new ModelNotFoundException('Task not found.');
+            if (!Task::find($id)) {
+                throw new ModelNotFoundException('Task not found.');
+            }
         }
 
         return [];

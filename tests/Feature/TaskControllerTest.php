@@ -83,8 +83,15 @@ class TaskControllerTest extends TestCase
         ]);
         $response->assertStatus(422);
     }
+    public function testUpdateNonExistingTask(){
+        $response = $this->put('/api/tasks/9999', [
+            'priority' => '1',
+        ]);
 
-    public function testDeleteFailedValidation(){
+        $response->assertStatus(404);
+    }
+
+    public function testDeleteNonExistingTask(){
         // sending non existing id
         $response = $this->delete('/api/tasks/9999');
         $response->assertStatus(404);

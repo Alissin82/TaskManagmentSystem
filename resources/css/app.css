@@ -1,3 +1,22 @@
+@import '../../node_modules/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "iransans";
+    src: url('../fonts/iransans/IRANSansWeb.eot');
+    src: url('../fonts/iransans/IRANSansWeb.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/iransans/IRANSansWeb.woff') format('woff');
+}
+
+body, body * {
+    font-family: "iransans", serif;
+}
+
+@layer components{
+    .btn {
+        @apply p-1 border rounded cursor-pointer hover:brightness-90
+    }
+}

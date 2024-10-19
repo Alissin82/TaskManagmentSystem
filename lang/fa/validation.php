@@ -7,7 +7,8 @@ return [
         "description" => "توضیحات",
         "due_date" => "تاریخ پایان",
         "priority" => "اولویت",
-        "status" => "وضعیت"
+        "status" => "وضعیت",
+        "id" => "شناسه"
     ],
 
     /*
