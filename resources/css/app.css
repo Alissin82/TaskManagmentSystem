@@ -1,4 +1,5 @@
 @import '../../node_modules/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css';
+@import '../../node_modules/toastr/build/toastr.min.css';
 
 @tailwind base;
 @tailwind components;
