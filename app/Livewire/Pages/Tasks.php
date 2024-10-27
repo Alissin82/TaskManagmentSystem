@@ -193,7 +193,6 @@ class Tasks extends Component
     public function render(): view
     {
         return view('livewire.pages.tasks', [
-            'priorities' => TaskPriority::values(),
             'tasks' => Task::all()->sortByDesc('created_at')
         ]);
     }

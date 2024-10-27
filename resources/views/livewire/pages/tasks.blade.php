@@ -51,7 +51,7 @@
                     <label for="priority">اولویت</label>
                     <div>
                         <select id="priority" name="priority" class="border rounded p-1" wire:model="priority">
-                            @foreach($priorities as $priority)
+                            @foreach(TaskPriority::values() as $priority)
                                 <option value="{{$priority}}" {{ TaskPriority::from($priority)->name == TaskPriority::normal->name ? 'selected' : '' }}>
                                     {{ __(TaskPriority::from($priority)->name) }}
                                 </option>
