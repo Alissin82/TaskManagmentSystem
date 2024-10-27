@@ -19,6 +19,7 @@
     "dependencies": {
         "@majidh1/jalalidatepicker": "^0.9.6",
         "jquery": "^3.7.1",
+        "socket.io-client": "^4.8.0",
         "toastr": "^2.1.4"
     }
 }
