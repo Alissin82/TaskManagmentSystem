@@ -4,6 +4,8 @@ namespace App\Livewire\Pages;
 
 use App\Dto\TaskDto;
 use App\Enums\TaskPriority;
+use App\Enums\TaskStatus;
+use App\Events\Task\TaskUpdated;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Services\Task\TaskService;
@@ -32,6 +34,17 @@ class Tasks extends Component
         $this->taskService = new TaskService();
     }
 
+    public function mount(): void
+    {
+        $this->clearInputs();
+    }
+
+    private function tasksUpdated(Task $task): void
+    {
+        $event = new TaskUpdated($task);
+        $event->broadcastOn();
+    }
+
     private function jalaliToGregorian($datetime): string
     {
         return Jalalian::fromFormat('Y/m/d H:i:s', $datetime)->toCarbon()->format('Y-m-d H:i:s');
@@ -46,16 +59,6 @@ class Tasks extends Component
         $this->description = null;
         $this->due_date = null;
         $this->priority = TaskPriority::normal->value;
-    }
-
-    public function submitForm(): void
-    {
-        $this->errors = [];
-        if ($this->updateMode){
-            $this->update();
-        } else {
-            $this->store();
-        }
     }
 
     public function store(): void
@@ -73,7 +76,8 @@ class Tasks extends Component
             if ( count($errors) > 0 ){
                 $this->errors = $errors;
             } else {
-                $this->taskService->store( new TaskDto($taskArray));
+                $task = $this->taskService->store( new TaskDto($taskArray));
+                $this->tasksUpdated($task);
                 session()->flash('message', 'وظیفه با موفقیت ساخته شد');
                 $this->clearInputs();
             }
@@ -95,7 +99,7 @@ class Tasks extends Component
 
                 $this->title = $task->title;
                 $this->description = $task->description;
-                $this->due_date = $task->due_date;
+                $this->due_date = $task->due_date != null ? Jalalian::fromDateTime($task->due_date)->format('Y/m/d H:i:s') : null;
                 $this->priority = $task->priority;
 
                 $this->task_id = $id;
@@ -104,9 +108,10 @@ class Tasks extends Component
             } else {
                 $this->errors = ['وظیفه یافت نشد'];
             }
-        } catch (Exception){
+        } catch (Exception $exception){
             $this->errors = [
-                'خطایی در پیدا کردن وظیفه رخ داد'
+                'خطایی در پیدا کردن وظیفه رخ داد',
+                $exception->getMessage()
             ];
         }
     }
@@ -128,12 +133,39 @@ class Tasks extends Component
                 $this->errors = $errors;
             } else {
                 $this->taskService->update( $taskArray, $this->task_id );
-                session()->flash('message', 'وظیفه با موفقیت ویرایش شد');
+
+                $this->tasksUpdated( $this->taskService->get($this->task_id) );
+
                 $this->clearInputs();
+                session()->flash('message', 'وظیفه با موفقیت ویرایش شد');
             }
-        } catch (Exception){
+        } catch (Exception $exception){
             $this->errors = [
-                'خطایی در ویرایش وظیفه رخ داد'
+                'خطایی در ویرایش وظیفه رخ داد',
+                $exception->getMessage()
+            ];
+        }
+    }
+
+    public function patchStatus($id, $status): void
+    {
+        $this->errors = [];
+        try {
+            $errors = Validator::make(['status' => $status], (new UpdateTaskRequest())->rules())->errors()->all();
+            if ( count($errors) > 0 ){
+                $this->errors = $errors;
+            } else {
+                $this->taskService->update( ['status' => $status], $id );
+
+                $this->tasksUpdated( $this->taskService->get($id) );
+
+                $this->clearInputs();
+                session()->flash('message', 'وضعیت وظیفه با موفقیت ویرایش شد');
+            }
+        } catch (Exception $exception){
+            $this->errors = [
+                'خطایی در ویرایش وضعیت وظیفه رخ داد',
+                $exception->getMessage()
             ];
         }
     }
@@ -143,14 +175,17 @@ class Tasks extends Component
         $this->errors = [];
         try {
             if (Task::find($id)){
+                $task = $this->taskService->get($id);
                 $this->taskService->delete($id);
+                $this->tasksUpdated($task);
                 session()->flash('message', 'وظیفه با موفقیت حذف شد');
             } else {
                 $this->errors = ['وظیفه یافت نشد'];
             }
-        } catch (Exception){
+        } catch (Exception $exception){
             $this->errors = [
-                'خطایی در حذف وظیفه رخ داد'
+                'خطایی در حذف وظیفه رخ داد',
+                $exception->getMessage()
             ];
         }
     }
