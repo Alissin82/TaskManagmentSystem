@@ -202,12 +202,12 @@
 
 @section('script')
     <script>
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             window.Echo.channel('tasks-channel')
                 .listen('TasksHasChanges', () => {
-                    Livewire.emit('$refresh');
+                    alert('test')
+                    // Livewire.emit('$refresh');
                 });
         });
-
     </script>
 @endsection
